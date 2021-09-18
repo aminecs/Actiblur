@@ -4,3 +4,4 @@ venv/
 videos/*
 audio/*
 .DS_Store
+instance/*

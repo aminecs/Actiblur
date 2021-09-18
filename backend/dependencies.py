@@ -1,6 +1,8 @@
-import os, subprocess
+import io, os, subprocess
 
 from sqlalchemy.orm import Session
+from google.cloud import speech
+
 from database import SessionLocal
 
 def get_db(): 
@@ -15,7 +17,7 @@ def get_db():
 def extract_audio(filename: str): 
     videos_dir = './videos/'
     audio_dir = './audio/'
-    audio_filename = filename.split('.')[0] + '.mp3'
+    audio_filename = filename.split('.')[0] + '.flac'
 
     # Make sure the video exists 
     if filename not in os.listdir(videos_dir): 
@@ -32,8 +34,26 @@ def extract_audio(filename: str):
 # Get captions 
 def get_captions(filename): 
     '''Extract captions from the mp3 file'''
-    pass 
+    client = speech.SpeechClient()
+
+    with io.open(filename, "rb") as audio_file:
+        audio_file_content = audio_file.read()
+    
+    audio = speech.RecognitionAudio(content=audio_file_content)
+    config = speech.RecognitionConfig(
+        encoding=speech.RecognitionConfig.AudioEncoding.FLAC,
+        enable_automatic_punctuation=True,
+        language_code='en-US',
+        audio_channel_count=2,
+    )
+
+    # Detects speech in the audio file
+    response = client.recognize(config=config, audio=audio)
+
+    for result in response.results:
+        print("Transcript: {}".format(result.alternatives[0].transcript))
 
 if __name__ == '__main__': 
     # Testing audio extraction
-    extract_audio('sample_video.mp4')
+    # extract_audio('sample_video.mp4') # took like 11s 
+    get_captions('./audio/sample_video.flac')
