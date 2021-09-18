@@ -5,3 +5,4 @@ videos/*
 audio/*
 .DS_Store
 instance/*
+captions/*

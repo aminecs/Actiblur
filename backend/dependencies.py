@@ -3,7 +3,12 @@ import io, os, subprocess
 from sqlalchemy.orm import Session
 from google.cloud import speech
 
+from config import settings
 from database import SessionLocal
+
+code_words = {
+    'I love red apples'
+}
 
 def get_db(): 
     db: Session = SessionLocal()
@@ -24,7 +29,7 @@ def extract_audio(filename: str):
         raise ValueError(f'File {filename} does not exist in the videos directory')
     
     # Run the ffmpeg command 
-    extract_audio_commands = ['ffmpeg', '-i', f'{videos_dir}{filename}', f'{audio_dir}{audio_filename}']
+    extract_audio_commands = ['ffmpeg', '-i', f'{videos_dir}{filename}', f'{audio_dir}{audio_filename}', '-y']
     if subprocess.call(extract_audio_commands) == 0: 
         print('Converted to audio successfully')
     else: 
@@ -49,9 +54,30 @@ def get_captions(filename):
 
     # Detects speech in the audio file
     response = client.recognize(config=config, audio=audio)
+    # Grab the frist translation result 
+    return response.results[0].alternatives[0].transcript
 
-    for result in response.results:
-        print("Transcript: {}".format(result.alternatives[0].transcript))
+def detect_code_words(transcript: str): 
+    '''Detect Code Words
+    Checks the transcript string for the code words'''
+
+    for phrase in code_words: 
+        if phrase in transcript: 
+            return True 
+    return False
+
+def contact_emergency_services(): 
+    '''Contact Emergency 
+    Contact emergency services with the location of this person 
+
+    TODO: Might need location data
+    '''
+
+    # Send a message to emergency services
+
+    print('Contacting Emergency services....', settings.EMERGENCY_NUMBER)
+    return
+
 
 if __name__ == '__main__': 
     # Testing audio extraction
