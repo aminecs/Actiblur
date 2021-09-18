@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 
+from dependencies import get_db
+
 app = FastAPI()
 
 
