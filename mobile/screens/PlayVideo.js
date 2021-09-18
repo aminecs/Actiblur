@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 
 import {Icon} from 'react-native-elements';
-import {NodeCameraView} from 'react-native-nodemediaclient';
+import Video from 'react-native-video';
 import BlurOnBtn from '../images/blur_on.png';
 import CCBtn from '../images/cc.png';
 import ShareBtn from '../images/share.png';
@@ -135,25 +135,16 @@ class App extends React.Component {
               <Text style={{fontWeight: 'bold'}}> Live</Text>
             </View>
           </View>
-          <NodeCameraView
-            // eslint-disable-next-line react-native/no-inline-styles
+          <Video
+            source={{uri: 'background'}} // Can be a URL or a local file.
+            ref={ref => {
+              this.player = ref;
+            }}
             style={{
-              height: this.height,
-              width: this.width,
+              flex: 1,
               zIndex: 1,
               backgroundColor: '#000000',
-            }}
-            ref={vb => {
-              this.vb = vb;
-            }}
-            outputUrl={`rtmp://192.168.162.218/live/${this.channel}`}
-            camera={this.cameraSettings}
-            audio={this.audioSettings}
-            video={this.videoSettings}
-            autopreview={true}
-            onStatus={(code, msg) => {
-              console.log('onStatus=' + code + ' msg=' + msg);
-            }}
+            }} // Store reference
           />
 
           <View style={styles.buttonWrapper}>

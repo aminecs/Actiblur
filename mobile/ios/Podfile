@@ -17,6 +17,8 @@ target 'pinnacle' do
     # Pods for testing
   end
 
+  pod 'RNFS', :path => '../node_modules/react-native-fs'
+
   # Enables Flipper.
   #
   # Note that if you have use_frameworks! enabled, Flipper will not work and
