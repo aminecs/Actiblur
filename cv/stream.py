@@ -1,13 +1,9 @@
 import cv2
 import mediapipe as mp
-from facenet_pytorch import MTCNN, InceptionResnetV1
 from sklearn import metrics
 from PIL import Image
 from img2vec_pytorch import Img2Vec
-import torch, torchvision
-import numpy as np
 
-resnet = InceptionResnetV1(pretrained='vggface2').eval()
 mp_face_detection = mp.solutions.face_detection
 mp_drawing = mp.solutions.drawing_utils
 faces = []
@@ -16,8 +12,6 @@ img2vec = Img2Vec(cuda=False)
 def to_blur(target_face):
     try:
         target_face_img = Image.fromarray(target_face)
-        # target_embedding = resnet(torchvision.transforms.ToTensor()(target_face_img).unsqueeze_(0))
-        #target_embedding = resnet(target_face.unsqueeze(0))
         target_embedding = img2vec.get_vec(target_face_img, tensor=True)
         for face_embedding in faces:
             validation_score = metrics.pairwise.cosine_similarity(target_embedding.reshape((1, -1)), face_embedding.reshape((1, -1)))
@@ -89,8 +83,6 @@ def main():
                     height = int(detection.location_data.relative_bounding_box.height * height_img)
                     face = example_img[y:y+height, x:x+width]
                     face_img = Image.fromarray(face)
-                    # image_tensor = torchvision.transforms.ToTensor()(face_img).unsqueeze_(0)
-
                     embedding = img2vec.get_vec(face_img, tensor=True)
                     faces.append(embedding)
 
