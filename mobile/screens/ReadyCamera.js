@@ -48,7 +48,7 @@ class ReadyCamera extends React.Component {
                   this.camera = ref;
                 }}
                 style={styles.preview}
-                type={RNCamera.Constants.Type.back}
+                type={RNCamera.Constants.Type.front}
               />
             </View>
             <View

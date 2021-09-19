@@ -9,6 +9,7 @@ import './App.css';
 
 function App() {
   const [toggle, setToggle] = useState(false);
+
   return (
     <div className="App">
         <img src={desktopImg} className="bg" alt="logo" />
@@ -17,7 +18,11 @@ function App() {
         </div>
         {toggle &&
         <div className = "liveVideo">
-          <div className = "stream"></div>
+          <div className = "stream">
+          <video controls muted>
+                <source src="http://localhost:4000/video" type="video/mp4"></source>
+            </video>
+          </div>
           <div className = "bottomNav">
             <div className = "left">
               <b>User0129 Stream</b>
