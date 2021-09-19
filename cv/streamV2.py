@@ -30,7 +30,7 @@ def to_blur(target_face):
 
 def get_stream():
 
-    #cap = cv2.VideoCapture("demo.m4v")
+    #cap = cv2.VideoCapture("rtmp://192.168.162.218/live/pinnacle")
     cap = cv2.VideoCapture(0)
     with mp_face_detection.FaceDetection(
         model_selection=1, min_detection_confidence=0.5) as face_detection:
