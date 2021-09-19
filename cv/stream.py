@@ -39,7 +39,7 @@ def to_blur(target_face):
         target_embedding = img2vec.get_vec(target_face_img, tensor=True)
         for face_embedding in faces:
             validation_score = metrics.pairwise.cosine_similarity(target_embedding.reshape((1, -1)), face_embedding.reshape((1, -1)))
-            if validation_score > 0.5:
+            if validation_score > 0.6:
                 return True
     except Exception as e:
         print("To blur exception: ", e)

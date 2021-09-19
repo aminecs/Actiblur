@@ -19,9 +19,7 @@ function App() {
         {toggle &&
         <div className = "liveVideo">
           <div className = "stream">
-          <video controls muted>
-                <source src="http://localhost:4000/video" type="video/mp4"></source>
-            </video>
+          <img src="http://localhost:5000/video_feed" width="100%"></img>
           </div>
           <div className = "bottomNav">
             <div className = "left">

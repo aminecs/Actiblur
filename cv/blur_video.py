@@ -17,7 +17,7 @@ def to_blur(target_face):
         target_embedding = img2vec.get_vec(target_face_img, tensor=True)
         for face_embedding in faces:
             validation_score = metrics.pairwise.cosine_similarity(target_embedding.reshape((1, -1)), face_embedding.reshape((1, -1)))
-            if validation_score > 0.8:
+            if validation_score > 0.6:
                 return True
     except Exception as e:
         print("To blur exception: ", e)
@@ -80,7 +80,7 @@ def read_video():
         cap.release()
         cv2.destroyAllWindows()
         fourcc = cv2.VideoWriter_fourcc('a','v','c','1')
-        writer = cv2.VideoWriter('blurred_no_janice.mp4',fourcc, 25.0, (frames[0].shape[1], frames[0].shape[0]))
+        writer = cv2.VideoWriter('blurred_no_tele.mp4',fourcc, 25.0, (frames[0].shape[1], frames[0].shape[0]))
         
         for i in range(0, len(frames)):
             writer.write(frames[i])
@@ -90,7 +90,7 @@ def main():
     james = cv2.cvtColor(cv2.imread("James.jpg"), cv2.COLOR_BGR2RGB)
     janice = cv2.cvtColor(cv2.imread("Janice.jpg"), cv2.COLOR_BGR2RGB)
     tele = cv2.cvtColor(cv2.imread("Tele.jpg"), cv2.COLOR_BGR2RGB)
-    friends = [james, tele]
+    friends = [james, janice]
     for friend in friends:
         height_img, width_img, _ = friend.shape
         with mp_face_detection.FaceDetection(
