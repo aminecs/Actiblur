@@ -7,17 +7,19 @@ import time
 
 mp_face_detection = mp.solutions.face_detection
 mp_drawing = mp.solutions.drawing_utils
-faces = []
-img2vec = Img2Vec(cuda=False)
+faces = dict()
+img2vec = Img2Vec(model="alexnet",cuda=False)
 
 def to_blur(target_face):
     try:
         target_face_img = Image.fromarray(target_face)
-        start = time.time()
         target_embedding = img2vec.get_vec(target_face_img, tensor=True)
-        for face_embedding in faces:
+        for face_embedding_keys in faces.keys():
+            face_embedding = faces[face_embedding_keys]
             validation_score = metrics.pairwise.cosine_similarity(target_embedding.reshape((1, -1)), face_embedding.reshape((1, -1)))
+            #print(validation_score)
             if validation_score > 0.6:
+                #print(f"Good validation {validation_score} with {face_embedding_keys}")
                 return True
     except Exception as e:
         print("To blur exception: ", e)
@@ -26,6 +28,7 @@ def to_blur(target_face):
 def read_video():
 
     cap = cv2.VideoCapture("demo.m4v")
+    #cap = cv2.VideoCapture(0)
     print(cap.isOpened())
     frames = []
     # while True:
@@ -67,10 +70,13 @@ def read_video():
                     cv2.rectangle(frame,(x,y),(x+width,y+height),(255,255,0),2)
                     blur_face = to_blur(face)
                     if blur_face:
-                        temp = cv2.resize(face, (5, 5), interpolation=cv2.INTER_LINEAR)
-                        output = cv2.resize(temp, (width, height), interpolation=cv2.INTER_NEAREST)
-                        frame[y:y+height, x:x+width] = output
-            #cv2.imshow('Frame',frame)
+                        try:
+                            temp = cv2.resize(face, (5, 5), interpolation=cv2.INTER_LINEAR)
+                            output = cv2.resize(temp, (width, height), interpolation=cv2.INTER_NEAREST)
+                            frame[y:y+height, x:x+width] = output
+                        except Exception as e:
+                            print(f"Exception {e}")
+            cv2.imshow('Frame',frame)
             if cv2.waitKey(5) & 0xFF == 27:
                 break
             frames.append(frame)
@@ -89,9 +95,8 @@ def read_video():
 def main():
     james = cv2.cvtColor(cv2.imread("James.jpg"), cv2.COLOR_BGR2RGB)
     janice = cv2.cvtColor(cv2.imread("Janice.jpg"), cv2.COLOR_BGR2RGB)
-    tele = cv2.cvtColor(cv2.imread("Tele.jpg"), cv2.COLOR_BGR2RGB)
-    friends = [james, janice]
-    for friend in friends:
+    friends = [("Janice", janice), ("James", james)]
+    for name, friend in friends:
         height_img, width_img, _ = friend.shape
         with mp_face_detection.FaceDetection(
             model_selection=1, min_detection_confidence=0.5) as face_detection:
@@ -109,7 +114,7 @@ def main():
                         face = friend[y:y+height, x:x+width]
                         face_img = Image.fromarray(face)
                         embedding = img2vec.get_vec(face_img, tensor=True)
-                        faces.append(embedding)
+                        faces[name] = embedding
 
     read_video()
 main()

@@ -10,7 +10,7 @@ from flask import Flask, Response
 mp_face_detection = mp.solutions.face_detection
 mp_drawing = mp.solutions.drawing_utils
 faces = []
-img2vec = Img2Vec(cuda=False)
+img2vec = Img2Vec(model="alexnet",cuda=False)
 app = Flask(__name__)
 
 def get_iou(bounding_box1, bounding_box2):
@@ -39,7 +39,8 @@ def to_blur(target_face):
         target_embedding = img2vec.get_vec(target_face_img, tensor=True)
         for face_embedding in faces:
             validation_score = metrics.pairwise.cosine_similarity(target_embedding.reshape((1, -1)), face_embedding.reshape((1, -1)))
-            if validation_score > 0.6:
+            print(f"Validation score {validation_score}")
+            if validation_score > 0.35:
                 return True
     except Exception as e:
         print("To blur exception: ", e)
@@ -47,8 +48,8 @@ def to_blur(target_face):
 
 def get_stream():
 
-    #cap = cv2.VideoCapture(0)
-    cap = cv2.VideoCapture("rtmp://192.168.162.218/live/pinnacle")
+    cap = cv2.VideoCapture(0)
+    #cap = cv2.VideoCapture("rtmp://192.168.162.218/live/pinnacle")
 
     counter = 0
     
