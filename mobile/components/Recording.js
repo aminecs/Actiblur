@@ -3,7 +3,7 @@ import {StyleSheet, View, Text, Image, TouchableOpacity} from 'react-native';
 
 import UserBtn from '../images/user_btn.png';
 
-const Recording = () => {
+const Recording = props => {
   return (
     <View
       style={{
@@ -19,7 +19,7 @@ const Recording = () => {
         <Text style={{color: 'gray'}}>Duration 19.17.21</Text>
         <Text style={{color: 'gray'}}>Duration: 06:03</Text>
       </View>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={props.navigateToVideo}>
         <Image source={UserBtn} />
       </TouchableOpacity>
     </View>

@@ -6,11 +6,15 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   SafeAreaView,
+  Image,
 } from 'react-native';
 
 import {RNCamera} from 'react-native-camera';
 import {Icon} from 'react-native-elements';
 import Recording from '../components/Recording';
+import KPHBtn from '../images/hkp.png';
+import PHPBtn from '../images/php.png';
+import BLMBtn from '../images/blm.png';
 
 class RecordingScreen extends React.Component {
   constructor(props) {
@@ -40,6 +44,10 @@ class RecordingScreen extends React.Component {
 
   stopRecording() {
     this.camera.stopRecording();
+  }
+
+  navigateToVideo() {
+    this.props.navigation.navigate('playVideo');
   }
 
   render() {
@@ -76,9 +84,8 @@ class RecordingScreen extends React.Component {
         <View
           style={{
             flexDirection: 'row',
-            marginTop: 20,
             justifyContent: 'space-between',
-            paddingVertical: 20,
+            paddingVertical: 10,
           }}>
           <Icon name="align-left" type="feather" color="gray" size={30} />
           <Icon name="settings" type="feather" color="gray" size={30} />
@@ -112,11 +119,13 @@ class RecordingScreen extends React.Component {
               flexDirection: 'row',
               justifyContent: 'center',
               backgroundColor: '#2EC4B6',
-              padding: 20,
+              padding: 15,
               marginTop: 10,
               borderRadius: 20,
             }}>
-            <Text>Upload</Text>
+            <Text style={{fontWeight: 'bold', color: 'white', fontSize: 18}}>
+              Upload
+            </Text>
           </View>
           <Text
             style={{
@@ -127,7 +136,26 @@ class RecordingScreen extends React.Component {
             }}>
             Past recording
           </Text>
-          <Recording />
+          <TouchableOpacity
+            style={{marginVertical: 10}}
+            onPress={this.navigateToVideo.bind(this)}>
+            <Image
+              source={PHPBtn}
+              style={{width: '100%', borderRadius: 10, padding: 10}}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity style={{marginVertical: 10}}>
+            <Image
+              source={KPHBtn}
+              style={{width: '100%', borderRadius: 10, padding: 10}}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity style={{marginVertical: 10}}>
+            <Image
+              source={BLMBtn}
+              style={{width: '100%', borderRadius: 10, padding: 10}}
+            />
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
     );
@@ -138,6 +166,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     margin: 20,
+    marginTop: 10,
   },
   preview: {
     flex: 1,

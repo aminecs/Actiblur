@@ -54,18 +54,6 @@ const styles = StyleSheet.create({
     zIndex: 2,
     bottom: 50,
   },
-  button: {
-    width: 200,
-    height: 40,
-    backgroundColor: '#014484',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingLeft: 15,
-    paddingRight: 15,
-  },
-  buttonText: {
-    color: '#ffffff',
-  },
 });
 
 class App extends React.Component {
