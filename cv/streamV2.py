@@ -4,11 +4,14 @@ from sklearn import metrics
 from PIL import Image
 from img2vec_pytorch import Img2Vec
 import time
+from flask import Flask, Response
+
 
 mp_face_detection = mp.solutions.face_detection
 mp_drawing = mp.solutions.drawing_utils
 faces = dict()
 img2vec = Img2Vec(model="alexnet",cuda=False)
+app = Flask(__name__)
 
 def to_blur(target_face):
     try:
@@ -25,19 +28,10 @@ def to_blur(target_face):
         print("To blur exception: ", e)
     return False
 
-def read_video():
+def get_stream():
 
     #cap = cv2.VideoCapture("demo.m4v")
     cap = cv2.VideoCapture(0)
-    print(cap.isOpened())
-    frames = []
-    # while True:
-    #     success, frame = cap.read()
-    #     cv2.imshow('Pinnacle', frame)
-    #     if cv2.waitKey(5) & 0xFF == 27:
-    #         break
-    # cap.release()
-    # cv2.destroyAllWindows()
     with mp_face_detection.FaceDetection(
         model_selection=1, min_detection_confidence=0.5) as face_detection:
 
@@ -76,24 +70,17 @@ def read_video():
                             frame[y:y+height, x:x+width] = output
                         except Exception as e:
                             print(f"Exception {e}")
-            cv2.imshow('Frame',frame)
+
+            #cv2.imshow('Frame',frame)
+            ret, buffer = cv2.imencode('.jpg', frame)
+            og_frame = buffer.tobytes()
+            yield (b'--frame\r\n'
+                b'Content-Type: image/jpeg\r\n\r\n' + og_frame + b'\r\n')
             if cv2.waitKey(5) & 0xFF == 27:
                 break
-            frames.append(frame)
-            print("Frame added")
-            #print(frames)
-        print("DONE")
-        cap.release()
-        cv2.destroyAllWindows()
-        fourcc = cv2.VideoWriter_fourcc('a','v','c','1')
-        writer = cv2.VideoWriter('blurred_no_tele.mp4',fourcc, 25.0, (frames[0].shape[1], frames[0].shape[0]))
-        
-        for i in range(0, len(frames)):
-            writer.write(frames[i])
-        writer.release()
+
     
 def main():
-    #james = cv2.cvtColor(cv2.imread("James.jpg"), cv2.COLOR_BGR2RGB)
     janice = cv2.cvtColor(cv2.imread("Janice.jpg"), cv2.COLOR_BGR2RGB)
     me = cv2.cvtColor(cv2.imread("me.jpeg"), cv2.COLOR_BGR2RGB)
     friends = [("Janice", janice), ("Amine", me)]
@@ -117,5 +104,10 @@ def main():
                         embedding = img2vec.get_vec(face_img, tensor=True)
                         faces[name] = embedding
 
-    read_video()
-main()
+@app.route('/video_feed')
+def video_feed():
+    return Response(get_stream(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+if __name__ == "__main__":
+    main()
+    app.run(debug=True)
