@@ -2,12 +2,13 @@ import io, os, subprocess
 
 from sqlalchemy.orm import Session
 from google.cloud import speech
+from twilio.rest import Client
 
 from config import settings
 from database import SessionLocal
 
 code_words = {
-    'I love red apples'
+    'Debra, I miss you'
 }
 
 def get_db(): 
@@ -72,8 +73,15 @@ def contact_emergency_services():
 
     TODO: Might need location data
     '''
-
+    client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
     # Send a message to emergency services
+
+    emergency_message = 'User in danger at Coppell, TX. Please help'
+
+    message = client.messages.create(
+        to=settings.EMERGENCY_NUMBER, 
+        from_=settings.TWILIO_PHONE_NUMBER,
+        body=emergency_message)
 
     print('Contacting Emergency services....', settings.EMERGENCY_NUMBER)
     return

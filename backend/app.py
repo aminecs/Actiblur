@@ -54,6 +54,3 @@ async def caption_video(uploaded_video: UploadFile = File(...)):
 
 # TODO 2: Login a user 
 
-
-
-# TODO 5: Make an emergency call with precise location data 
