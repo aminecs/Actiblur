@@ -1,3 +1,7 @@
 fastapi[all]
 sqlalchemy 
 psycopg2-binary
+google-cloud-speech
+aiofiles
+python-dotenv
+twilio
