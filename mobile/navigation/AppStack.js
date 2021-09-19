@@ -6,6 +6,8 @@ import BlurTypeScreen from '../screens/BlurTypeScreen';
 import RecordingScreen from '../screens/RecordingScreen';
 import ReadyCamera from '../screens/ReadyCamera';
 import ConfirmCamera from '../screens/ConfirmCamera';
+import PlayVideo from '../screens/PlayVideo';
+
 const Stack = createStackNavigator();
 
 const AppStack = () => {
@@ -35,6 +37,11 @@ const AppStack = () => {
         name="confirmCamera"
         options={{headerShown: false}}
         component={ConfirmCamera}
+      />
+      <Stack.Screen
+        name="playVideo"
+        options={{headerShown: false}}
+        component={PlayVideo}
       />
       <Stack.Screen
         name="liveStream"

@@ -7,7 +7,10 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import BlurAllFacesImg from '../images/blur_all_faces.png';
+import BlurFaceBlue from '../images/blur_Face_blue.png';
+import BlurFaceGreen from '../images/blur_face_green.png';
+import BlurFaceOrange from '../images/blur_face_orange.png';
+import BlurFaceRed from '../images/blur_face_red.png';
 import {Icon} from 'react-native-elements';
 
 const BlurTypeScreen = ({navigation}) => {
@@ -19,13 +22,17 @@ const BlurTypeScreen = ({navigation}) => {
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
         margin: '5%',
+        backgroundColor: '#f1f8f7',
+        width: '100%',
       }}>
       <SafeAreaView
         // eslint-disable-next-line react-native/no-inline-styles
         style={{
+          flex: 1,
           marginTop: '25%',
           justifyContent: 'flex-start',
           alignItems: 'flex-start',
+          width: '90%',
         }}>
         <TouchableOpacity onPress={() => navigation.navigate('home')}>
           <Icon name="align-left" type="feather" color="gray" size={35} />
@@ -43,20 +50,32 @@ const BlurTypeScreen = ({navigation}) => {
             Protect yourself {'\n'}and others around you
           </Text>
         </View>
-        <View>
+        <View style={{flex: 1, width: '100%'}}>
           <TouchableOpacity style={styles.blurTypeBtn}>
-            <Image source={BlurAllFacesImg} />
+            <Image
+              source={BlurFaceGreen}
+              style={{width: '100%', borderRadius: 20}}
+            />
           </TouchableOpacity>
           <TouchableOpacity style={styles.blurTypeBtn}>
-            <Image source={BlurAllFacesImg} />
+            <Image
+              source={BlurFaceOrange}
+              style={{width: '100%', borderRadius: 20}}
+            />
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.blurTypeBtn}
             onPress={() => navigation.navigate('readyCamera')}>
-            <Image source={BlurAllFacesImg} />
+            <Image
+              source={BlurFaceBlue}
+              style={{width: '100%', borderRadius: 20}}
+            />
           </TouchableOpacity>
           <TouchableOpacity style={styles.blurTypeBtn}>
-            <Image source={BlurAllFacesImg} />
+            <Image
+              source={BlurFaceRed}
+              style={{width: '100%', borderRadius: 20}}
+            />
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -67,6 +86,8 @@ const BlurTypeScreen = ({navigation}) => {
 const styles = StyleSheet.create({
   blurTypeBtn: {
     marginVertical: 10,
+    width: '100%',
+    borderRadius: 10,
   },
 });
 
