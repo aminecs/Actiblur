@@ -21,7 +21,8 @@ def to_blur(target_face):
             face_embedding = faces[face_embedding_keys]
             validation_score = metrics.pairwise.cosine_similarity(target_embedding.reshape((1, -1)), face_embedding.reshape((1, -1)))
             print(validation_score)
-            if validation_score > 0.6:
+            # Heuristically defined validation score
+            if validation_score > 0.47:
                 print(f"Good validation {validation_score} with {face_embedding_keys}")
                 return True
     except Exception as e:
@@ -30,7 +31,7 @@ def to_blur(target_face):
 
 def get_stream():
 
-    #cap = cv2.VideoCapture("rtmp://192.168.162.218/live/pinnacle")
+    #cap = cv2.VideoCapture("rtmp://192.168.154.57/live/pinnacle")
     cap = cv2.VideoCapture(0)
     with mp_face_detection.FaceDetection(
         model_selection=1, min_detection_confidence=0.5) as face_detection:
@@ -81,7 +82,7 @@ def get_stream():
 
     
 def main():
-    janice = cv2.cvtColor(cv2.imread("Janice.jpg"), cv2.COLOR_BGR2RGB)
+    janice = cv2.cvtColor(cv2.imread("janiceV2.jpg"), cv2.COLOR_BGR2RGB)
     me = cv2.cvtColor(cv2.imread("me.jpeg"), cv2.COLOR_BGR2RGB)
     friends = [("Janice", janice), ("Amine", me)]
     for name, friend in friends:
